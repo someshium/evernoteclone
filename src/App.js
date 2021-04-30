@@ -1,23 +1,53 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState, useEffect} from 'react';
+import {projectFirestore} from './firebase/config';
+import Editor from './editor/Editor'
+import Sidebar from './sidebar/Sidebar'
+
+
+
 
 function App() {
+  const firebase = require('firebase') ;
+
+  const [selectedNoteIndex, setSelectedNoteIndex] = useState(null) ;
+  const [selectedNote, setSelectedNote] = useState(null) ;
+  const [notes, setNotes] = useState(null) ;
+
+
+  useEffect(() => {
+    projectFirestore.collection('notes').onSnapshot( serverUpdate => {
+      const notes = serverUpdate.docs.map(doc => {
+        const data= doc.data();
+        data['id'] = doc.id;
+        return data;
+
+      })
+      console.log(notes);
+      setNotes(notes);
+
+    })
+
+  },[])
+
+
+    const selectNote = (note, index) => {
+      selectedNoteIndex = index;
+      selectedNote = note;
+    }
+
+    const deleteNote = () => {
+
+    }
+
+    const newNote = () => {
+      
+    }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <Sidebar selectedNoteIndex = {selectedNoteIndex} notes= {notes} deleteNote = {deleteNote} selectNote = {selectNote} newNote = {newNote}/>
+     <Editor />
     </div>
   );
 }
