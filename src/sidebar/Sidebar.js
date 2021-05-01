@@ -53,7 +53,7 @@ const Sidebar = ({selectedNoteIndex, notes, classes, deleteNote, selectNote}) =>
                 {
                    notes ? notes.map((note, index) => ( 
                         <div key= {index}>
-                           <Sidebaritem note = {note} index= {index} selectedNoteIndex = {selectedNoteIndex} handleSelectNote={selectNote} handleDeleteNote={deleteNote}/> 
+                           <Sidebaritem note = {note} index= {index} selectedNoteIndex = {selectedNoteIndex} selectNote={handleSelectNote} deleteNote={handleDeleteNote}/> 
                            <Divider></Divider>    
                         </div>
                     )) : "Add a Note!"

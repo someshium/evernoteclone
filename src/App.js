@@ -14,6 +14,21 @@ function App() {
   const [selectedNote, setSelectedNote] = useState(null) ;
   const [notes, setNotes] = useState(null) ;
 
+  const noteUpdate = (id,noteObj) => {
+    
+    if(!id) return;
+
+    console.log(id, noteObj);
+
+  //  projectFirestore.collection('notes').doc(id).update({
+  //    title:noteObj.title,
+  //    body: noteObj.text,
+  //    timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+  //  })
+
+
+  }
+
 
   useEffect(() => {
     projectFirestore.collection('notes').onSnapshot( serverUpdate => {
@@ -32,8 +47,8 @@ function App() {
 
 
     const selectNote = (note, index) => {
-      selectedNoteIndex = index;
-      selectedNote = note;
+      setSelectedNoteIndex(index);
+      setSelectedNote(note);
     }
 
     const deleteNote = () => {
@@ -41,13 +56,16 @@ function App() {
     }
 
     const newNote = () => {
+
       
     }
 
   return (
     <div className="App">
      <Sidebar selectedNoteIndex = {selectedNoteIndex} notes= {notes} deleteNote = {deleteNote} selectNote = {selectNote} newNote = {newNote}/>
-     <Editor />
+     {
+       selectedNote? <Editor selectedNote={selectedNote} selectedNoteIndex ={selectedNoteIndex} notes={notes} noteUpdate={noteUpdate}/> : null
+     }
     </div>
   );
 }

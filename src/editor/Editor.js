@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import ReactQuill from 'react-quill';
 import debounce from '../helpers';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
@@ -9,7 +9,7 @@ import styles from './styles';
 
 
 
-const Editor = (props) => {
+const Editor = ({selectedNote,selectedNoteIndex,note,classes, noteUpdate}) => {
 
      const [text, setText] =  useState('');
      const [title , setTitle] =  useState('');
@@ -22,12 +22,33 @@ const Editor = (props) => {
 
      };
 
-    const update = useRef(debounce(() => {
-        // come back again later
-        console.log("UPDATING DATABASE");
+
+     const update = useRef(debounce(() => {
+        
+        noteUpdate(selectedNote.id, {ntitle: selectedNote.title,  ntext:selectedNote.text })
+
      }, 1500)).current;
+
+    
      
-    const {classes} = props
+   
+
+   
+   
+
+     useEffect(() => {
+      setTitle(selectedNote.title);
+      setText(selectedNote.body);
+      setId(selectedNote.id) ;
+     
+
+     },[selectedNote]);
+
+     
+
+     
+
+
     return (
         <div className={classes.editorContainer}>
             <ReactQuill value = {text} onChange={updateBody}></ReactQuill>

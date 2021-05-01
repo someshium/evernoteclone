@@ -22,7 +22,7 @@ const SidebarItem = ({note, index, selectedNoteIndex, classes, selectNote, delet
         <div key={index}>
             <ListItem
             className={classes.listItem}
-            selected={selectedNoteIndex == index}
+            selected={selectedNoteIndex === index}
             align-items="flex-start">
                 <div className={classes.textSection} onClick = {() => selectNote(note, index)}>
                     <ListItemText primary={note.title} secondary={ removeHTMLTags(note.body.substring(0,30))+ '...'}>
