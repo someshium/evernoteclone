@@ -1,6 +1,6 @@
 import './App.css';
 import React, {useState, useEffect} from 'react';
-import {projectFirestore} from './firebase/config';
+import {projectFirestore, timestamp} from './firebase/config';
 import Editor from './editor/Editor'
 import Sidebar from './sidebar/Sidebar'
 
@@ -17,14 +17,14 @@ function App() {
   const noteUpdate = (id,noteObj) => {
     
     if(!id) return;
-
+    
     console.log(id, noteObj);
 
-  //  projectFirestore.collection('notes').doc(id).update({
-  //    title:noteObj.title,
-  //    body: noteObj.text,
-  //    timestamp: firebase.firestore.FieldValue.serverTimestamp() 
-  //  })
+    projectFirestore.collection('notes').doc(id).update({
+     title:noteObj.title,
+     body: noteObj.text,
+     createdAt: timestamp()
+   })
 
 
   }
@@ -43,7 +43,7 @@ function App() {
 
     })
 
-  },[])
+  },[setNotes])
 
 
     const selectNote = (note, index) => {
@@ -51,14 +51,47 @@ function App() {
       setSelectedNote(note);
     }
 
-    const deleteNote = () => {
+    const deleteNote = (note) => {
+      const noteIndex = notes.indexOf(note);
+      if(selectedNoteIndex === noteIndex){
+        setSelectedNoteIndex(null);
+        setSelectedNote(null);
+      }
+      else{
+
+          if(notes.length>1)
+          {
+            selectNode(notes[selectedNoteIndex-1],selectedNoteIndex-1) 
+          }
+          else{
+
+            setSelectedNoteIndex(null);
+            selectedNote(null);
+          }
+
+       
+      }
+
+
 
     }
 
-    const newNote = () => {
+    const newNote = async(title) => {
+      const note= {
+        title: title,
+        body: '',
+
+      };
+      const  newFromDB = await projectFirestore.collection('notes').add({title: note.title , body:note.body, createdAt:timestamp() });
+
+      const newID = newFromDB.id
+      await setNotes([...notes, note] ) ;
+      const newNoteIndex = notes.indexOf(notes.filter(note => note.id === newID)[0])
+      setSelectedNote(notes[newNoteIndex])
+      setSelectedNoteIndex(newNoteIndex);
 
       
-    }
+    } 
 
   return (
     <div className="App">

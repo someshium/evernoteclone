@@ -7,7 +7,7 @@ import { Divider, Button } from '@material-ui/core';
 import Sidebaritem from '../sidebaritem/SidebarItem';
 
 
-const Sidebar = ({selectedNoteIndex, notes, classes, deleteNote, selectNote}) => {
+const Sidebar = ({selectedNoteIndex, notes, classes, deleteNote, selectNote,newNote}) => {
     const [addingNote, setAddingNote] = useState(false);
     const [title, setTitle] = useState(false);
 
@@ -21,9 +21,10 @@ const Sidebar = ({selectedNoteIndex, notes, classes, deleteNote, selectNote}) =>
         setTitle(txt) ;
     }
 
-    const newNote = () => {
-        console.log(addingNote);
-        console.log(title);
+    const handleNewNote = () => {
+        newNote(title);
+        setTitle(null);
+        setAddingNote(false);
         
     }
 
@@ -42,12 +43,17 @@ const Sidebar = ({selectedNoteIndex, notes, classes, deleteNote, selectNote}) =>
     return (
         <div className={classes.sidebarContainer}>
             <Button onClick = {newNoteBtnClick} className={classes.newNoteBtn}>{addingNote? "Cancel": "Add Note"}</Button>
+           
             {
                 addingNote ? 
                 <div>
                     <input type="text" className={classes.newNoteInput} placeholder="enter note title" 
                     onKeyUp={(e) => updateTitle(e.target.value)}/>
-                </div>: null 
+                     <Button className={classes.newNoteSubmitBtn}
+            onClick = {handleNewNote}>Submit Note</Button>
+                </div>
+                
+                : null 
             }
             <List>
                 {
@@ -59,8 +65,7 @@ const Sidebar = ({selectedNoteIndex, notes, classes, deleteNote, selectNote}) =>
                     )) : "Add a Note!"
                 }
             </List>
-            <Button className={classes.newNoteSubmitBtn}
-            onClick = {newNote}>Submit Note</Button>
+            
             
         </div>
     )

@@ -9,11 +9,11 @@ import styles from './styles';
 
 
 
-const Editor = ({selectedNote,selectedNoteIndex,note,classes, noteUpdate}) => {
+const Editor = ({selectedNote,selectedNoteIndex,notes,classes, noteUpdate}) => {
 
-     const [text, setText] =  useState('');
-     const [title , setTitle] =  useState('');
-     const [id, setId] =  useState('');
+     const [text, setText] =  useState(selectedNote.body);
+     const [title , setTitle] =  useState(selectedNote.title);
+     const [id, setId] =  useState(selectedNote.id);
      
      const updateBody = async(val) => {
 
@@ -23,26 +23,35 @@ const Editor = ({selectedNote,selectedNoteIndex,note,classes, noteUpdate}) => {
      };
 
 
+    
+    
+     const updateTitle = async (txt) => {
+        await setTitle(txt);
+        update();
+      }
+
+      
      const update = useRef(debounce(() => {
-        
-        noteUpdate(selectedNote.id, {ntitle: selectedNote.title,  ntext:selectedNote.text })
+       
+        noteUpdate(id, {title: title,  text: text })
 
      }, 1500)).current;
 
-    
-     
-   
 
-   
-   
+     
 
      useEffect(() => {
-      setTitle(selectedNote.title);
-      setText(selectedNote.body);
-      setId(selectedNote.id) ;
-     
+        setTitle(selectedNote.title);
+        setText(selectedNote.body);
+        setId(selectedNote.id) ;
+       
+  
+       },[selectedNote]);
 
-     },[selectedNote]);
+      
+   
+
+     
 
      
 
@@ -51,7 +60,7 @@ const Editor = ({selectedNote,selectedNoteIndex,note,classes, noteUpdate}) => {
 
     return (
         <div className={classes.editorContainer}>
-            <ReactQuill value = {text} onChange={updateBody}></ReactQuill>
+            <ReactQuill value = {text} onChange={(val) => updateBody(val)}></ReactQuill>
             
         </div>
     )
